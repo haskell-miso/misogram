@@ -82,6 +82,15 @@ data ViewerSet
   deriving stock (Eq, Show, Generic)
   deriving anyclass (ToJSON, FromJSON)
 -----------------------------------------------------------------------------
+-- | A screen transition in flight: the pushed screen slides in from the
+-- right; on pop the leaving screen (kept here) slides back out, revealing the
+-- screen beneath. 'NavDone' clears it once the slide has played.
+data Nav
+  = Pushing
+  | Popping Screen
+  deriving stock (Eq, Generic)
+  deriving anyclass (ToJSON, FromJSON)
+-----------------------------------------------------------------------------
 data Screen
   = ScreenSplash
   | ScreenTab                    -- ^ whatever 'tab' says
@@ -129,6 +138,7 @@ data Model = Model
   , profileTab   :: Int            -- ^ 0 grid, 1 reels, 2 tagged
   , notifsSeen   :: Bool
   , kbHeight     :: Double         -- ^ soft-keyboard height (px), 0 when hidden
+  , navAnim      :: Maybe Nav      -- ^ in-flight push/pop screen transition
   } deriving stock (Eq, Generic)
     deriving anyclass (ToJSON, FromJSON)
 -----------------------------------------------------------------------------
@@ -159,6 +169,8 @@ data Action
   | SetKeyboard Double
   -- ^ Lynx's @keyboardstatuschanged@ global event: the keyboard's height when
   -- shown, 0 when hidden (lifts the comment bar above the keyboard)
+  | NavDone
+  -- ^ the push/pop slide finished: drop the extra screen ('navAnim')
     -- swiper: main-thread (MTS) handlers, see "MisoGram.Swiper"
   | SwipeStart Double Double DOMRef
   | SwipeMove Double Double DOMRef

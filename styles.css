@@ -44,6 +44,52 @@ page {
   background-color: #fff;
 }
 
+/* ---- Screen transitions (push slides in from the right, pop slides back
+   out; the wrapper stacks over the underlying screen for the duration) ---- */
+
+.nav {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.screen-in {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  animation: nav-in 0.3s 1 cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+/* Rests off-screen after the slide, so it holds until NavDone unmounts it. */
+.screen-out {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  animation: nav-out 0.3s 1 cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+@keyframes nav-in {
+  0%   { transform: translateX(100%); }
+  100% { transform: translateX(0); }
+}
+
+@keyframes nav-out {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(100%); }
+}
+
 .scroll {
   flex: 1;
   width: 100%;

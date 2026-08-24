@@ -56,8 +56,25 @@ darkScreen m = case screen m of
   ScreenViewer{} -> True
   _              -> False
 -----------------------------------------------------------------------------
+-- | The screen area. During a push/pop transition ('navAnim') both screens
+-- are mounted: the underlying one in place, the entering/leaving one in an
+-- absolutely-positioned wrapper playing the slide (Instagram's navigation
+-- feel; every screen paints an opaque background, so the overlay covers).
 screenView :: Model -> V
-screenView m = case screen m of
+screenView m = view_ [ className "nav" ] $ case navAnim m of
+  Just Pushing
+    | (prev : _) <- stack m ->
+        [ screenFor m prev
+        , view_ [ className "screen-in" ] [ screenFor m (screen m) ]
+        ]
+  Just (Popping leaving) ->
+    [ screenFor m (screen m)
+    , view_ [ className "screen-out" ] [ screenFor m leaving ]
+    ]
+  _ -> [ screenFor m (screen m) ]
+-----------------------------------------------------------------------------
+screenFor :: Model -> Screen -> V
+screenFor m s = case s of
   ScreenSplash          -> splash
   ScreenTab             -> case tab m of
     Home    -> homeScreen m
@@ -181,6 +198,7 @@ track key vertical start size pageViews = view_
   , event (static (VE.onTouchEndMainWith    swipeEndH))
   , event (static (VE.onTouchCancelMainWith swipeEndH))
   , event (static (VE.onLayoutChangeMainWith swipeInitH))
+  , event (static (VE.onLayoutMainWith swipeInitH))
   ]
   pageViews
 
@@ -626,7 +644,11 @@ composeScreen m = view_ [ className "screen" ]
 -- Reels: swipe vertically between everyone's pictures
 -----------------------------------------------------------------------------
 reelsScreen :: Model -> V
-reelsScreen m = view_ [ className "reels", VE.onLayoutChange (ReelsLayout . VE.layoutChangeDetailEventHeight) ]
+    -- Both layout-event names: released engines (LynxExplorer) fire @layout@,
+    -- newer Lynx sources fire @layoutchange@.
+reelsScreen m = view_ [ className "reels"
+                      , VE.onLayoutChange (ReelsLayout . VE.layoutChangeDetailEventHeight)
+                      , VE.onLayout       (ReelsLayout . VE.layoutChangeDetailEventHeight) ]
   [ track "reels-track" True 0 (reelsHeight m) (map reel (posts m))
   , view_ [ className "reels-head" ] [ txt "reels-title" "Reels", spacer, ic "camera-white" ]
   ]

@@ -58,6 +58,7 @@ initialModel = Model
   , profileTab   = 0
   , notifsSeen   = False
   , kbHeight     = 0
+  , navAnim      = Nothing
   }
 -----------------------------------------------------------------------------
 -- | How long the splash screen holds, in microseconds.
@@ -98,13 +99,20 @@ updateModel = \case
   SetTab t ->
     navigate $ \m -> m { screen = ScreenTab, tab = t, stack = [] }
 
-  Push s ->
-    navigate $ \m -> onEnter s m { screen = s, stack = screen m : stack m }
+  Push s -> do
+    navigate $ \m -> onEnter s m
+      { screen = s, stack = screen m : stack m, navAnim = Just Pushing }
+    io (threadDelay navHold >> pure NavDone)
 
-  Pop ->
+  Pop -> do
     navigate $ \m -> case stack m of
-      (s : rest) -> m { screen = s, stack = rest }
+      (s : rest) -> m { screen = s, stack = rest
+                      , navAnim = Just (Popping (screen m)) }
       []         -> m { screen = ScreenTab }
+    io (threadDelay navHold >> pure NavDone)
+
+  NavDone ->
+    modify $ \m -> m { navAnim = Nothing }
 
   ToggleLike pid ->
     modify $ \m -> m { liked = toggle pid (liked m) }
@@ -227,8 +235,16 @@ updateModel = \case
 -- the main thread to forget its track offsets (the elements are recreated).
 navigate :: (Model -> Model) -> Effect () () Model Action
 navigate f = do
-  modify (\m -> (f m) { pages = [] })
+  -- Clear any in-flight slide first, so a navigation that doesn't animate
+  -- (tab switch, splash) can't inherit a stale transition; Push/Pop re-arm it
+  -- inside @f@.
+  modify (\m -> (f m { navAnim = Nothing }) { pages = [] })
   runOnMain ResetSwipers
+
+-- | How long the push/pop slide holds both screens (µs) — a hair past the
+-- 300ms CSS animation.
+navHold :: Int
+navHold = 330000
 -----------------------------------------------------------------------------
 -- | Per-screen setup when a screen is pushed.
 onEnter :: Screen -> Model -> Model
