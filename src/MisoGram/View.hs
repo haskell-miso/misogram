@@ -169,6 +169,12 @@ track key vertical start size pageViews = view_
   , textProp "data-axis" (if vertical then "y" else "x")
   , textProp "data-size" (ms size)
   , textProp "data-start" (ms start)
+    -- Consume horizontal slides (right ±45°, left 135°–225°) so the native
+    -- scroller of an enclosing vertical <scroll-view> (the feed) can't claim
+    -- the gesture mid-swipe once the finger drifts a few px vertically. The
+    -- angle ranges must nest ([[start, end], …]), hence prop over the flat
+    -- consumeSlideEvent_.
+  , prop "consume-slide-event" ([[-45, 45], [135, 225]] :: [[Double]])
   , event (static (VE.onTouchStartMainWith  swipeStartH))
   , event (static (VE.onTouchMoveMainWith   swipeMoveH))
   , event (static (VE.onTouchEndMainWith    swipeEndH))
