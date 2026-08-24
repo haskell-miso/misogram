@@ -8,9 +8,8 @@ carousels, explore, reels, profiles, comments, notifications and a "new post"
 flow — populated with eight fake accounts (one of them you), seventeen posts,
 and twenty-three different bowls of ramen.
 
-
-<img width="40%" height="1280" alt="image" src="https://github.com/user-attachments/assets/ad9513c4-80bf-4292-8be7-cbfb55e318b3" />
-
+[file:///home/dmjio/Downloads/misogram2-small.mp4
+](https://github.com/user-attachments/assets/b8a9a882-8466-45a5-a6b7-21c0781c36f0)
 
 
 ## What's in the app
