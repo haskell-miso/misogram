@@ -17,6 +17,7 @@ module MisoGram.View (viewModel) where
 -----------------------------------------------------------------------------
 import           Data.Maybe (fromMaybe, listToMaybe)
 import           Miso hiding (text_, screen)
+import qualified Miso.CSS as CSS
 import           Miso.Html.Property (className)
 import           Miso.Native
 import           Miso.Native.X.Element (input_, textarea_)
@@ -495,7 +496,11 @@ commentsScreen m pid = view_ [ className "screen" ]
             : hairline
             : map commentRow (comments p)
             ++ [ txt "empty" "No comments yet. Start the conversation." | null (comments p) ] )
-  , view_ [ className "comment-bar" ]
+    -- The keyboard overlays the LynxView, so lift the bar above it by the
+    -- height from Lynx's keyboardstatuschanged event (0 when hidden).
+  , view_ ( className "comment-bar"
+          : [ CSS.style_ [ CSS.marginBottom (ms (round (kbHeight m) :: Int) <> "px") ]
+            | kbHeight m > 0 ] )
     [ avatarImg "avatar-32" you
     , input_
       [ className "comment-input"

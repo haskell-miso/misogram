@@ -21,6 +21,7 @@ module Main where
 -----------------------------------------------------------------------------
 import           Control.Concurrent (threadDelay)
 import           Miso hiding (screen)
+import           Miso.DSL (jsg, (#), syncCallback2, fromJSValUnchecked)
 import           Miso.Native
 import qualified Miso.String as MS
 -----------------------------------------------------------------------------
@@ -56,6 +57,7 @@ initialModel = Model
   , reelsHeight  = 0
   , profileTab   = 0
   , notifsSeen   = False
+  , kbHeight     = 0
   }
 -----------------------------------------------------------------------------
 -- | How long the splash screen holds, in microseconds.
@@ -69,7 +71,20 @@ doubleTapMs = 350
 updateModel :: Action -> Effect () () Model Action
 updateModel = \case
 
-  Boot ->
+  Boot -> do
+    -- Lift the comment bar above the soft keyboard: Lynx fires the
+    -- @keyboardstatuschanged@ global event with (status, height) — on iOS the
+    -- height is UIKit points, which are Lynx px 1:1. Subscribed once here on
+    -- the BTS (the emitter is a BTS module).
+    withSink $ \sink -> do
+      cb <- syncCallback2 $ \statusV heightV -> do
+        status <- fromJSValUnchecked statusV
+        height <- fromJSValUnchecked heightV
+        sink (SetKeyboard (if status == ("on" :: MisoString) then height else 0))
+      lynxG <- jsg "lynx"
+      emitter <- lynxG # "getJSModule" $ ["GlobalEventEmitter" :: MisoString]
+      _ <- emitter # "addListener" $ ("keyboardstatuschanged" :: MisoString, cb)
+      pure ()
     io (threadDelay splashHold >> pure SplashDone)
 
   SplashDone ->
@@ -186,6 +201,9 @@ updateModel = \case
 
   MarkNotifsSeen ->
     modify $ \m -> m { notifsSeen = True }
+
+  SetKeyboard h ->
+    modify $ \m -> m { kbHeight = h }
 
   -- Swiper: main-thread handlers (see "MisoGram.Swiper").
   SwipeStart x y ref -> io_ (swipeStart (x, y) ref)

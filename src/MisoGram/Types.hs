@@ -128,6 +128,7 @@ data Model = Model
   , reelsHeight  :: Double         -- ^ measured height of the reels pager
   , profileTab   :: Int            -- ^ 0 grid, 1 reels, 2 tagged
   , notifsSeen   :: Bool
+  , kbHeight     :: Double         -- ^ soft-keyboard height (px), 0 when hidden
   } deriving stock (Eq, Generic)
     deriving anyclass (ToJSON, FromJSON)
 -----------------------------------------------------------------------------
@@ -155,6 +156,9 @@ data Action
   | SetProfileTab Int
   | ReelsLayout Double
   | MarkNotifsSeen
+  | SetKeyboard Double
+  -- ^ Lynx's @keyboardstatuschanged@ global event: the keyboard's height when
+  -- shown, 0 when hidden (lifts the comment bar above the keyboard)
     -- swiper: main-thread (MTS) handlers, see "MisoGram.Swiper"
   | SwipeStart Double Double DOMRef
   | SwipeMove Double Double DOMRef
