@@ -2,7 +2,11 @@
   description = "miso-gram — Misogram, an Instagram clone made of ramen, in Haskell (miso-native)";
 
   inputs = {
-    miso.url = "github:dmjio/miso/dual-thread";
+    # miso's default branch (master) — the native (dual-thread) backend was
+    # merged there. Needs the native-fixes commits (consumeSlideEvent_ pairs,
+    # "layout" event alias) pushed; until then build with
+    #   nix build --override-input miso path:/absolute/path/to/miso
+    miso.url = "github:dmjio/miso";
   };
   # For local miso development (with uncommitted changes), override the input to
   # a local checkout — note the ABSOLUTE path (relative `path:../miso` doesn't

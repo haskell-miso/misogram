@@ -31,7 +31,7 @@ import           MisoGram.Types
 import           MisoGram.View (viewModel)
 -----------------------------------------------------------------------------
 main :: IO ()
-main = native (nativeEvents <> nativeXEvents) (static (mountStatic_ app))
+main = native (nativeEvents <> nativeXEvents) (static (mountStatic app))
 -----------------------------------------------------------------------------
 app :: Component () () Model Action
 app = (component initialModel updateModel viewModel) { mount = Just Boot }

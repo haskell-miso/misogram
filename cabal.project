@@ -11,7 +11,9 @@ allow-newer:
 package miso
   flags: +template-haskell +native
 
+-- master (dual-thread was merged there); bump past the native-fixes commits
+-- (consumeSlideEvent_ pairs, "layout" event alias) once they are pushed.
 source-repository-package
   type: git
   location: https://github.com/dmjio/miso
-  tag: 97b60b2247d194aabab0f8815213c1d00a7bc3f0
+  tag: 429a54ac9e70690236ba3f65fdd8f22aae35fd53
