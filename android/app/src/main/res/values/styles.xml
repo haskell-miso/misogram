@@ -1,0 +1,20 @@
+<resources>
+    <!-- Misogram is white (feed, search, profile), so the status / nav bar
+         bands around the LynxView are white too — see MainActivity.java and
+         ios/App/ViewController.m's equivalent note. -->
+    <style name="AppTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+    </style>
+
+    <!-- Launch screen (the iOS UILaunchScreen equivalent): the gradient bowl
+         glyph centred on white, shown until MainActivity swaps in AppTheme. -->
+    <style name="SplashTheme" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">@android:color/white</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@android:color/white</item>
+    </style>
+</resources>

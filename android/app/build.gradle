@@ -1,0 +1,51 @@
+apply plugin: 'com.android.application'
+
+android {
+    namespace 'io.dmj.misogram'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "io.dmj.misogram"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    // Lynx core + JS engine. Versions pinned to match ios/Podfile (4.0.0).
+    implementation "org.lynxsdk.lynx:lynx:4.0.0"
+    implementation "org.lynxsdk.lynx:lynx-jssdk:4.0.0"
+    implementation "org.lynxsdk.lynx:lynx-trace:4.0.0"
+    implementation "org.lynxsdk.lynx:primjs:4.0.0"
+
+    // Extended (X) elements: <input>, <textarea>, <overlay>, <svg>, <refresh>,
+    // <viewpager>, <webview>, <scroll-coordinator>, <blur-view>, … the Android
+    // counterpart of ios/Podfile's XElement pod.
+    implementation "org.lynxsdk.lynx:xelement:4.0.0"
+
+    // Image / Log / Http services (the Android counterpart of ios/Podfile's
+    // LynxService pod) plus their Fresco/OkHttp backends.
+    implementation "org.lynxsdk.lynx:lynx-service-image:4.0.0"
+    implementation "org.lynxsdk.lynx:lynx-service-log:4.0.0"
+    implementation "org.lynxsdk.lynx:lynx-service-http:4.0.0"
+    implementation "com.facebook.fresco:fresco:2.3.0"
+    implementation "com.facebook.fresco:animated-gif:2.3.0"
+    implementation "com.facebook.fresco:animated-webp:2.3.0"
+    implementation "com.facebook.fresco:webpsupport:2.3.0"
+    implementation "com.facebook.fresco:animated-base:2.3.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.0"
+}

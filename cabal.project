@@ -1,0 +1,17 @@
+-- The flake's devShell provides the GHC JavaScript-backend toolchain; cabal
+-- finds miso's native (LynxJS dual-thread) backend from the pinned git rev
+-- below (the same rev flake.lock pins for `nix build`).
+packages:
+  .
+
+allow-newer:
+  all:base
+
+-- miso's native (LynxJS dual-thread) backend + TH lens generation.
+package miso
+  flags: +template-haskell +native
+
+source-repository-package
+  type: git
+  location: https://github.com/dmjio/miso
+  tag: 97b60b2247d194aabab0f8815213c1d00a7bc3f0

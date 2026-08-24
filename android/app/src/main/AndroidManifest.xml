@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".MisoGramApplication"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:label="Misogram"
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <!-- usesCleartextTraffic: dev only, mirrors ios/App/Info.plist's
+             NSAllowsArbitraryLoads — lets MainActivity load a bundle over plain
+             HTTP from a local dev server. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

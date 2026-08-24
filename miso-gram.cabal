@@ -1,0 +1,50 @@
+cabal-version: 2.2
+name: miso-gram
+version: 0.1.0.0
+synopsis: An Instagram clone made of ramen, in Haskell via miso-native
+description:
+  Misogram: an Instagram look-alike built on miso's native (LynxJS
+  dual-thread) backend. A splash screen, a home feed with stories and
+  swipeable photo carousels, explore, reels, profiles, comments,
+  notifications and a "new post" flow, all populated with fake followers and
+  bowls of ramen. Compiles to a @.lynx.bundle@ via the GHC JavaScript backend
+  + rspeedy, with every photo and icon embedded in the bundle.
+category: Web
+license: BSD-3-Clause
+build-type: Simple
+extra-source-files:
+  styles.css
+  README.md
+
+source-repository head
+  type: git
+  location: https://github.com/haskell-miso/miso-gram
+
+common options
+  if arch(javascript)
+    ld-options:
+      -sENVIRONMENT=shell -sWASM=0 -sEXPORTED_RUNTIME_METHODS=HEAP8
+
+  if !arch(wasm32) && !arch(javascript)
+    ghc-options:
+      -O0
+
+executable miso-gram
+  import:
+    options
+  main-is:
+    Main.hs
+  hs-source-dirs:
+    src
+  other-modules:
+    MisoGram.Types
+    MisoGram.Data
+    MisoGram.Assets
+    MisoGram.Swiper
+    MisoGram.View
+  build-depends:
+    base, miso, mtl, containers
+  default-language:
+    Haskell2010
+  ghc-options:
+    -Wall -Wno-name-shadowing

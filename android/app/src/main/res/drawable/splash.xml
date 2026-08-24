@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Launch screen: white, with the gradient bowl glyph centred (the same
+     artwork as ios/App/Assets.xcassets/LaunchLogo.imageset). -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:drawable="@android:color/white" />
+    <item
+        android:width="96dp"
+        android:height="96dp"
+        android:gravity="center">
+        <bitmap android:src="@drawable/launch_logo" android:gravity="center" />
+    </item>
+</layer-list>
