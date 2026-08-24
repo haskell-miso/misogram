@@ -8,7 +8,10 @@ carousels, explore, reels, profiles, comments, notifications and a "new post"
 flow — populated with eight fake accounts (one of them you), seventeen posts,
 and twenty-three different bowls of ramen.
 
-<p align="center"><em>Instagram's chrome, pixel for pixel where it counts — but the logo is a white wireframe bowl.</em></p>
+
+<img width="40%" height="1280" alt="image" src="https://github.com/user-attachments/assets/ad9513c4-80bf-4292-8be7-cbfb55e318b3" />
+
+
 
 ## What's in the app
 
