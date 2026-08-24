@@ -81,7 +81,7 @@ nix/mk-lynx-bundle.nix    miso's bundle helper, forked to inline JPEGs too
   `MainThreadRef`, `touchmove` only records where the finger wants the track and
   a vsync-coalesced `eachFrame` loop paints it once per frame, and the snap on
   release is a native compositor transition. A track describes itself through
-  attributes (`id`, `data-n`, `data-axis`, `data-size`, `data-start`) that the
+  attributes (`data-key`, `data-n`, `data-axis`, `data-size`, `data-start`) that the
   MTS reads with `getAttribute` when the finger lands, so one global ref serves
   every carousel on screen. The two threads are bridged explicitly: a settled
   page crosses MTS→BTS as `Snapped` → `SetPage` via `runOnBG` (repainting the

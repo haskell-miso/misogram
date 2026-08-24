@@ -17,7 +17,7 @@ module MisoGram.View (viewModel) where
 -----------------------------------------------------------------------------
 import           Data.Maybe (fromMaybe, listToMaybe)
 import           Miso hiding (text_, screen)
-import           Miso.Html.Property (className, id_)
+import           Miso.Html.Property (className)
 import           Miso.Native
 import           Miso.Native.X.Element (input_, textarea_)
 import qualified Miso.String as MS
@@ -165,7 +165,7 @@ chunks n xs = let (h, t) = splitAt n xs in h : chunks n t
 track :: MisoString -> Bool -> Int -> Double -> [V] -> V
 track key vertical start size pageViews = view_
   [ className (if vertical then "track-y" else "track-x")
-  , id_ key
+  , textProp "data-key" key
   , textProp "data-n" (ms (length pageViews))
   , textProp "data-axis" (if vertical then "y" else "x")
   , textProp "data-size" (ms size)

@@ -19,7 +19,9 @@
 -- 'getAttribute' when the finger lands, so one global 'MainThreadRef' serves
 -- every carousel on screen:
 --
--- * @id@ — the key its offset is remembered under between drags
+-- * @data-key@ — the key its offset is remembered under between drags (not
+--   @id@: miso's native context routes @id@ to Lynx's @__SetID@, which
+--   @getAttribute@ \/ @__GetAttributeByName@ can't read back)
 -- * @data-n@ — page count
 -- * @data-axis@ — @x@ (default) or @y@
 -- * @data-size@ — page size in px for a vertical track (horizontal tracks are
@@ -103,7 +105,7 @@ data Geo = Geo
 -----------------------------------------------------------------------------
 readGeo :: DOMRef -> IO Geo
 readGeo ref = do
-  key   <- getAttribute ref "id"
+  key   <- getAttribute ref "data-key"
   n     <- num <$> getAttribute ref "data-n"
   axis  <- getAttribute ref "data-axis"
   size  <- num <$> getAttribute ref "data-size"
