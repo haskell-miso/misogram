@@ -1,7 +1,7 @@
 # 🍜 📱 misogram
 
-**Misogram** — an Instagram clone made entirely of ramen, written in Haskell on
-[miso](https://github.com/dmjio/miso)'s **native (LynxJS dual-thread)**
+**Misogram** — an Instagram clone made with [LynxJS](https://lynxjs.org) on
+[miso](https://github.com/dmjio/miso)'s **native**
 backend. Same idea as [miso-lynx-gallery](https://github.com/haskell-miso/miso-lynx-gallery),
 much more app: a splash screen, a home feed with stories and swipeable photo
 carousels, explore, reels, profiles, comments, notifications and a "new post"
