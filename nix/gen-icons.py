@@ -148,6 +148,19 @@ def main():
     render(svg("stroke", bowl, C["white"]), "assets/brand/glyph-white.png", 512)
     n += 1
 
+    # ... the same bowl as the Android adaptive-icon foreground: transparent,
+    # glyph filling 60% of the canvas (the adaptive safe zone is 66/108dp),
+    # one PNG per density of the 108dp base.
+    for dpi, size in [("mdpi", 108), ("hdpi", 162), ("xhdpi", 216),
+                      ("xxhdpi", 324), ("xxxhdpi", 432)]:
+        out = f"android/app/src/main/res/mipmap-{dpi}/ic_launcher_foreground.png"
+        pad = ('<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 40 40" '
+               f'fill="none" stroke="{C["white"]}" stroke-width="{SW}" '
+               'stroke-linecap="round" stroke-linejoin="round">'
+               f'<style>.f{{fill:{C["white"]};stroke:none}}</style>{bowl}</svg>')
+        render(pad, out, size)
+        n += 1
+
     # ... and the white wordmark, recovered from the flattened dark one by
     # turning luminance into alpha (the dark glyph is intact in wordmark.png).
     from PIL import Image
