@@ -1,4 +1,4 @@
-# 🍜 📱 miso-gram
+# 🍜 📱 misogram
 
 **Misogram** — an Instagram clone made entirely of ramen, written in Haskell on
 [miso](https://github.com/dmjio/miso)'s **native (LynxJS dual-thread)**
