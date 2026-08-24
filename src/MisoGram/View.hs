@@ -520,10 +520,13 @@ commentsScreen m pid = view_ [ className "screen" ]
           : [ CSS.style_ [ CSS.marginBottom (ms (round (kbHeight m) :: Int) <> "px") ]
             | kbHeight m > 0 ] )
     [ avatarImg "avatar-32" you
+      -- Keyed by the comment count: the iOS x-input's text can't be set
+      -- programmatically (no value prop/method — only default-value at
+      -- creation), so posting remounts a fresh, empty input.
     , input_
       [ className "comment-input"
+      , textProp "key" ("cin" <> ms (maybe (0 :: Int) (length . comments) post))
       , InP.placeholder_ ("Add a comment for " <> maybe "" (handle . userById . author) post <> "…")
-      , textProp "value" (commentDraft m)
       , InE.onInput (SetCommentDraft . InE.inputValue)
       , InE.onConfirm (const (SubmitComment pid))
       ]

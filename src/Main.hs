@@ -237,8 +237,10 @@ navigate :: (Model -> Model) -> Effect () () Model Action
 navigate f = do
   -- Clear any in-flight slide first, so a navigation that doesn't animate
   -- (tab switch, splash) can't inherit a stale transition; Push/Pop re-arm it
-  -- inside @f@.
-  modify (\m -> (f m { navAnim = Nothing }) { pages = [] })
+  -- inside @f@. The search query resets too: navigation recreates the
+  -- \<input\> empty (the iOS x-input's text can't be set programmatically),
+  -- so a kept query would silently filter behind an empty box.
+  modify (\m -> (f m { navAnim = Nothing }) { pages = [], searchQuery = "" })
   runOnMain ResetSwipers
 
 -- | How long the push/pop slide holds both screens (µs) — a hair past the
