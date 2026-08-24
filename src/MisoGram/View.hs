@@ -26,6 +26,7 @@ import qualified Miso.Native.Element.Image.Property      as IP
 import qualified Miso.Native.Element.ScrollView.Property as SP
 import qualified Miso.Native.Element.Text.Property       as TP
 import qualified Miso.Native.Element.View.Event          as VE
+import qualified Miso.Native.Element.View.Property       as VP
 import qualified Miso.Native.X.Element.Input.Event       as InE
 import qualified Miso.Native.X.Element.Input.Property    as InP
 import qualified Miso.Native.X.Element.Textarea.Event    as TaE
@@ -169,12 +170,11 @@ track key vertical start size pageViews = view_
   , textProp "data-axis" (if vertical then "y" else "x")
   , textProp "data-size" (ms size)
   , textProp "data-start" (ms start)
-    -- Consume horizontal slides (right ±45°, left 135°–225°) so the native
+    -- Consume horizontal slides (right ±45°, left 135°–180° / -180°–-135°:
+    -- angles live in -180..180, so leftward needs both flanks) so the native
     -- scroller of an enclosing vertical <scroll-view> (the feed) can't claim
-    -- the gesture mid-swipe once the finger drifts a few px vertically. The
-    -- angle ranges must nest ([[start, end], …]), hence prop over the flat
-    -- consumeSlideEvent_.
-  , prop "consume-slide-event" ([[-45, 45], [135, 225]] :: [[Double]])
+    -- the gesture mid-swipe once the finger drifts a few px vertically.
+  , VP.consumeSlideEvent_ [ (-180, -135), (-45, 45), (135, 180) ]
   , event (static (VE.onTouchStartMainWith  swipeStartH))
   , event (static (VE.onTouchMoveMainWith   swipeMoveH))
   , event (static (VE.onTouchEndMainWith    swipeEndH))
