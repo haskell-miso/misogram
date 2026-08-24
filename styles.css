@@ -97,6 +97,10 @@ page {
   flex-direction: column;
 }
 
+.feed-item {
+  width: 100%;
+}
+
 .spacer {
   flex: 1;
 }

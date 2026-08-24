@@ -23,6 +23,7 @@ import           Miso.Native
 import           Miso.Native.X.Element (input_, textarea_)
 import qualified Miso.String as MS
 -----------------------------------------------------------------------------
+import           Miso.Native.Element.List.Property (defaultListOptions)
 import qualified Miso.Native.Element.Image.Property      as IP
 import qualified Miso.Native.Element.ScrollView.Property as SP
 import qualified Miso.Native.Element.Text.Property       as TP
@@ -236,17 +237,21 @@ homeScreen m = view_ [ className "screen" ]
       ( ic "heart" : [ view_ [ className "badge-dot" ] [] | not (notifsSeen m) ] )
     , view_ [ className "icon-wrap" ] [ ic "messenger" ]
     ]
-  , scrollView_
-    [ className "scroll", SP.scrollOrientation_ "vertical", SP.enableScroll_ True, SP.bounces_ True ]
-    ( storiesBar m
-    : hairline
-    : map (postCard m) (posts m)
-    ++ [ view_ [ className "feed-end" ]
+    -- A recycling <list>, not a <scroll-view>: the scroll-view mounted all
+    -- seventeen cards (and every carousel page) at once, which is what made
+    -- scrolling heavy. The list windows and reuses items by item-key.
+  , list_ defaultListOptions [ className "scroll" ]
+    ( feedItem "stories" (storiesBar m)
+    : feedItem "rule" hairline
+    : [ feedItem ("p" <> ms (postId p)) (postCard m p) | p <- posts m ]
+    ++ [ feedItem "end" $ view_ [ className "feed-end" ]
          [ ic "check", txt "feed-end-title" "You're all caught up"
          , txt "feed-end-sub" "You've seen all new posts from the past 3 days." ]
        ]
     )
   ]
+  where
+    feedItem k v = listItem_ [ className "feed-item", textProp "item-key" k ] [ v ]
 -----------------------------------------------------------------------------
 storiesBar :: Model -> V
 storiesBar _ = scrollView_
