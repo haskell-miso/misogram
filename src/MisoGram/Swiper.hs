@@ -191,25 +191,17 @@ swipeEnd ref = do
       paintSnap (sVertical s) ref to
       pure (Just (sKey s, idx))
 -----------------------------------------------------------------------------
--- | A track just laid out (@layoutchange@). A track already in 'sOffsets' is
--- a recycled element (the feed 'list_' reuses items as they scroll back into
--- the window): repaint the offset it was left at, since the fresh element
--- sits at page 0. Otherwise, if it should open on a page other than 0, jump
--- there instantly.
+-- | A track just laid out (@layoutchange@): if it should open on a page other
+-- than 0 and hasn't been touched yet, jump there instantly.
 swipeInit :: DOMRef -> IO ()
 swipeInit ref = do
   g <- readGeo ref
   s <- readMainThreadRef swipe
-  when (gSize g > 0) $ case lookup (gKey g) (sOffsets s) of
-    Just off -> do
-      setStyleProperty ref "transition" "none"
-      setStylePropertyTransform ref [ axisTranslate (gVertical g) off ]
-    Nothing | gStart g > 0 -> do
-      let off = pageOffset (gSize g) (clampPage (gCount g) (gStart g))
-      setStyleProperty ref "transition" "none"
-      setStylePropertyTransform ref [ axisTranslate (gVertical g) off ]
-      writeMainThreadRef swipe s { sOffsets = (gKey g, off) : sOffsets s }
-    _ -> pure ()
+  when (gSize g > 0 && gStart g > 0 && lookup (gKey g) (sOffsets s) == Nothing) $ do
+    let off = pageOffset (gSize g) (clampPage (gCount g) (gStart g))
+    setStyleProperty ref "transition" "none"
+    setStylePropertyTransform ref [ axisTranslate (gVertical g) off ]
+    writeMainThreadRef swipe s { sOffsets = (gKey g, off) : sOffsets s }
 -----------------------------------------------------------------------------
 -- | Forget every remembered offset (and any half-finished drag). Run whenever
 -- navigation recreates the tracks.
