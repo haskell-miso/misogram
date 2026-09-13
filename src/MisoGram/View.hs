@@ -38,10 +38,10 @@ import           MisoGram.Data
 import           MisoGram.Swiper (touchPos)
 import           MisoGram.Types
 -----------------------------------------------------------------------------
-type V = View () Model Action
+type V = View () () Model Action
 -----------------------------------------------------------------------------
-viewModel :: () -> () -> Model -> V
-viewModel _ _ m = view_ [ className (if dark then "app-dark" else "app") ]
+viewModel :: Model -> V
+viewModel m = view_ [ className (if dark then "app-dark" else "app") ]
   ( screenView m
   : [ tabBar m | showsTabBar (screen m) ]
   ++ [ toastView t | Just t <- [toast m] ]
